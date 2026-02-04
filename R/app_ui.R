@@ -9,8 +9,31 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
-      golem::golem_welcome_page() # Remove this line to start building your UI
+    shinydashboard::dashboardPage(
+      header = shinydashboard::dashboardHeader(
+        title = "PegelOnline",
+        titleWidth = 300,
+        shinydashboard::dropdownMenuOutput("messageMenu")
+      ),
+      sidebar = shinydashboard::dashboardSidebar(
+        shinydashboard::sidebarMenu(
+          shinydashboard::menuItem(
+            text = "Station-Dashboard",
+            icon = icon("grip"),
+            tabName = "station_dashboard"
+          )
+        ),
+        shinydashboard::sidebarMenuOutput("menu")
+      ),
+      body = shinydashboard::dashboardBody(
+        shinydashboard::tabItems(
+          shinydashboard::tabItem(
+            tabName = "station_dashboard",
+            mod_station_dashboard_ui("station_dashboard_1")
+          )
+        )
+        
+      )
     )
   )
 }
