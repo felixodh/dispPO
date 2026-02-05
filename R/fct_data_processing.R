@@ -40,4 +40,27 @@ stat_calc_stations <- function(wl_data){
   return(stations_stats)
 }
 
+# stats_table <- stat_calc_stations(wl_data = wl_data)
+
+#' Title
+#'
+#' @param stats_table 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+percent_online <- function(stats_table){
+  
+  sum_tab <- stats_table |> 
+    dplyr::group_by(flag) |> 
+    dplyr::summarise(n = dplyr::n()) |> 
+  dplyr::ungroup()
+  
+  sum_tab[1,"perc"] <- sum_tab$n[1] * 100 / sum(sum_tab$n)
+  sum_tab[2,"perc"] <- sum_tab$n[2]*100 / sum(sum_tab$n)
+  return(sum_tab)
+  
+}
+
 
