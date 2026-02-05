@@ -13,7 +13,9 @@ stat_calc_stations <- function(wl_data){
   stations_stats <- stations_meta |> 
     dplyr::mutate(lst_wl_date = lubridate::as_datetime(NA),
                   flag = as.integer(NA),
-                  lst_wl = as.double(NA))
+                  color = as.character(NA),
+                  lst_wl = as.double(NA),
+                  text = as.character(NA))
   
   for(i in 1:length(wl_data)){
     station <- stations_stats[i,]
@@ -29,7 +31,17 @@ stat_calc_stations <- function(wl_data){
           is.na(lst_wl_date) ~ 0,
           lst_wl_date <= Sys.Date() - 3 ~ 0,
           lst_wl_date > Sys.Date() - 3 ~ 1),
-        lst_wl = as.double(lst_val)
+        color = dplyr::case_when(
+          flag == 0 ~ "red",
+          flag == 1 ~ "green",
+          is.na(flag) ~ "grey"),
+        lst_wl = as.double(lst_val),
+        text = paste0(
+          "<b>", shortname, "</b><br>",
+          longname, "<br>",
+          "Last WL: ", lst_wl, "<br>",
+          "Date: ", lst_wl_date
+        )
       )
     stations_stats <- stations_stats |> 
       dplyr::rows_upsert(
@@ -40,7 +52,9 @@ stat_calc_stations <- function(wl_data){
   return(stations_stats)
 }
 
-# stats_table <- stat_calc_stations(wl_data = wl_data)
+# stats_data <- stat_calc_stations(wl_data = wl_data)
+
+
 
 #' Title
 #'
