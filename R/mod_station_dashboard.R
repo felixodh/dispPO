@@ -25,6 +25,12 @@ mod_station_dashboard_ui <- function(id) {
           outputId = ns("off_box"),
           width = 3
         )
+      ),
+      column(
+        width = 12,
+        leaflet::leafletOutput(
+          outputId = ns("po_map"),
+          height = "700px")
       )
     )
   )
@@ -75,6 +81,21 @@ mod_station_dashboard_server <- function(id,
         icon = icon("tower-broadcast"),
         color = "red"
       )
+    })
+    
+    output$po_map <- leaflet::renderLeaflet({
+      leaflet::leaflet(stats_table$data) |> 
+        leaflet::addTiles() |>    # OpenStreetMap
+        leaflet::addCircleMarkers(
+          lng = ~long,
+          lat = ~lat,
+          color = ~color,
+          fillColor = ~color,
+          fillOpacity = 0.8,
+          radius = 6,
+          stroke = TRUE,
+          popup = ~text
+        )
     })
     
     
