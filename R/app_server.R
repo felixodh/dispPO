@@ -8,10 +8,11 @@ app_server <- function(input, output, session) {
   # Your application server logic
   
   wl_data <- reactiveValues(
+    # data = fetch_po_data(initial = F)
     data = readRDS(po_cache_dir(folder = "dispPO_data",file = "wl_list.rds"))
   )
   # wl_data <- readRDS(po_cache_dir(folder = "dispPO_data",file = "wl_list.rds"))
-    
+  # wl_data <- fetch_po_data(initial = F)
   stations_meta <- reactiveValues(
     data = stations_meta
   )
