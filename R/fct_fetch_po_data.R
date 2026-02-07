@@ -1,4 +1,5 @@
 
+
 #' Fetch and cache Pegelonline water level data
 #'
 #' Downloads water level (W) measurements from the Pegelonline REST API
@@ -35,18 +36,10 @@
 #'
 #' @seealso
 #' \code{\link{get_stations}}, \code{\link{empty_wl_dt}}
-#'
-#' @examples
-#' \dontrun{
-#' # Initial load (creates cache)
-#' wl_data <- fetch_po_data(initial = TRUE)
-#'
-#' # Incremental update
-#' wl_data <- fetch_po_data(initial = FALSE)
-#' }
+#' @export
 fetch_po_data <- function(initial) {
   
-  # --- setup ------------------------------------------------------------
+  # --- setup 
   if (isTRUE(initial)) {
     days    <- 30L
     wl_list <- list()
@@ -66,12 +59,12 @@ fetch_po_data <- function(initial) {
     ))
   }
   
-
+  
   
   stations <- get_stations()
   
   
-  # --- loop over stations ----------------------------------------------
+  # --- loop over stations 
   for(i in 1:nrow(stations)){
     
     message(i, " / ", nrow(stations), " — ", stations$shortname[i])
@@ -122,7 +115,7 @@ fetch_po_data <- function(initial) {
       wl_list[[uuid]]$wl <-
         dplyr::rows_upsert(wl_list[[uuid]]$wl, wl_dt, by = "timestamp")
     }
-
+    
   }
   
   # --- cache ------------------------------------------------------------
@@ -131,8 +124,7 @@ fetch_po_data <- function(initial) {
   saveRDS(wl_list,po_cache_dir(folder = "dispPO_data","wl_list.rds"))
   
   return(wl_list)
-
-
+  
 }
 
 
