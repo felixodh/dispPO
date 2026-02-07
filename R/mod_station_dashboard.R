@@ -50,7 +50,9 @@ mod_station_dashboard_server <- function(id,
     
     observe({
       stats_table$data <- stat_calc_stations(wl_data = wl_data$data)
+      # stats_table <-  stat_calc_stations(wl_data = wl_data)
       perc_table$data <- percent_online(stats_table = stats_table$data)
+      # perc_table <- percent_online(stats_table = stats_table)
     })
     
     output$count_box <- shinydashboard::renderInfoBox({
@@ -76,7 +78,7 @@ mod_station_dashboard_server <- function(id,
     output$off_box <- shinydashboard::renderInfoBox({
       shinydashboard::infoBox(
         title = "Stations Offline",
-        subtitle = "based on last data transmission",
+        subtitle = "last date > 3 days ago",
         value = paste(round(perc_table$data$perc[1],digits = 1),"%",sep = ""),
         icon = icon("tower-broadcast"),
         color = "red"
