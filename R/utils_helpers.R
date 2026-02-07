@@ -109,7 +109,7 @@ get_stations <- function(){
 #' empty_wl_dt()
 empty_wl_dt <- function(){
   wl_dt <- dplyr::tibble(
-    timestamp = lubridate::ymd_hms(NA,tz = "Europe/Berlin"),
-    wl_cm = as.double(NA))
+    timestamp = lubridate::ymd_hms(character(),tz = "Europe/Berlin"),
+    wl_cm = as.double())
   return(wl_dt)
 }
