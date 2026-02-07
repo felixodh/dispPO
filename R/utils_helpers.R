@@ -86,15 +86,29 @@ get_stations <- function(){
   
 }
 
-#' Title
+#' Create an empty water level tibble
 #'
-#' @returns
-#' @export
+#' Returns an empty tibble with the correct column structure and types
+#' for water level data. This is mainly used as a safe fallback when
+#' no measurements are returned by the Pegelonline API or a request fails.
+#'
+#' @details
+#' The returned tibble contains the expected columns \code{timestamp}
+#' and \code{wl_cm} with appropriate classes, but no valid observations.
+#' It can be safely combined with existing data using
+#' \code{dplyr::rows_upsert()} or similar operations.
+#'
+#' @return
+#' A tibble with columns:
+#' \describe{
+#'   \item{timestamp}{POSIXct datetime (Europe/Berlin), \code{NA}}
+#'   \item{wl_cm}{Numeric water level in centimeters, \code{NA}}
+#' }
 #'
 #' @examples
+#' empty_wl_dt()
 empty_wl_dt <- function(){
   wl_dt <- dplyr::tibble(
-    id = as.integer(NA),
     timestamp = lubridate::ymd_hms(NA,tz = "Europe/Berlin"),
     wl_cm = as.double(NA))
   return(wl_dt)
