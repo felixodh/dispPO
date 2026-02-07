@@ -20,7 +20,7 @@ stat_calc_stations <- function(wl_data){
   for(i in 1:length(wl_data)){
     station <- stations_stats[i,]
     wl_data_stat <- wl_data[[station$uuid]]$wl
-    lst_date <- lubridate::as_datetime(max(wl_data_stat$timestamp))
+    lst_date <- lubridate::as_datetime(max(wl_data_stat$timestamp,na.rm = T))
     lst_val <- as.double(wl_data_stat |> 
       dplyr::filter(timestamp == lst_date) |> 
       dplyr::select(wl_cm))
