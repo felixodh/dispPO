@@ -85,3 +85,17 @@ get_stations <- function(){
   return(meta_station)
   
 }
+
+#' Title
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+empty_wl_dt <- function(){
+  wl_dt <- dplyr::tibble(
+    id = as.integer(NA),
+    timestamp = lubridate::ymd_hms(NA,tz = "Europe/Berlin"),
+    wl_cm = as.double(NA))
+  return(wl_dt)
+}
