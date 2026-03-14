@@ -21,6 +21,11 @@ app_ui <- function(request) {
             text = "Station-Dashboard",
             icon = icon("grip"),
             tabName = "station_dashboard"
+          ),
+          shinydashboard::menuItem(
+            text = "Current water level status",
+            icon = icon("grip"),
+            tabName = "wl_status"
           )
         ),
         shinydashboard::sidebarMenuOutput("menu")
@@ -30,6 +35,10 @@ app_ui <- function(request) {
           shinydashboard::tabItem(
             tabName = "station_dashboard",
             mod_station_dashboard_ui("station_dashboard_1")
+          ),
+          shinydashboard::tabItem(
+            tabName = "wl_status",
+            mod_current_state_ui("current_state_1")
           )
         )
         
