@@ -139,12 +139,37 @@ fetch_po_data <- function(initial) {
 }
 
 
-#' Title
+#' Fetch Current Water Level Measurements from PegelOnline
 #'
-#' @returns
-#' @export
+#' `fetch_po_curr_meas` downloads the latest water level measurements for all stations
+#' from the PegelOnline REST API and returns them in a tibble.
+#'
+#' @details
+#' For each station retrieved from `get_stations()`, this function performs a GET request 
+#' to the PegelOnline API endpoint `/W/currentmeasurement.json`. If the request succeeds,
+#' it extracts the timestamp, water level (`wl`), and state information (`stateMnwMhw`, `stateNswHsw`).  
+#' Stations without valid responses are skipped, and a message is printed for failures.
+#'
+#' @return A tibble with one row per station measurement and the following columns:
+#' \describe{
+#'   \item{station}{Station long name (character).}
+#'   \item{uuid}{Station UUID (character).}
+#'   \item{timestamp}{POSIXct timestamp of the measurement.}
+#'   \item{wl}{Numeric water level in cm.}
+#'   \item{stateMnwMhw}{Water level state at min/max warning (character).}
+#'   \item{stateNswHsw}{Water level state at normal/alert (character).}
+#' }
 #'
 #' @examples
+#' \dontrun{
+#' # Fetch current measurements for all stations
+#' curr_meas <- fetch_po_curr_meas()
+#' 
+#' # Inspect first few rows
+#' head(curr_meas)
+#' }
+#'
+#' @export
 fetch_po_curr_meas <- function(){
   
   curr_meas <- dplyr::tibble(

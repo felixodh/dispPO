@@ -1,13 +1,43 @@
 
 
-#' Title
+#' Calculate Latest Water Level Statistics for Stations
 #'
-#' @param wl_data 
+#' `stat_calc_stations` computes the most recent water level (WL) for each station,
+#' assigns a status flag, determines a display color, and generates an HTML popup text.
 #'
-#' @returns
-#' @export
+#' The function combines station metadata from `get_stations()` with water level data 
+#' provided in `wl_data`. For each station, it finds the latest measurement timestamp, 
+#' determines if the measurement is recent (within the last 3 days), assigns a flag and 
+#' a color (green, red, or grey), and constructs an HTML string suitable for Leaflet popups.
+#'
+#' @param wl_data A named list where each element corresponds to a station UUID and 
+#'   contains a list with a `wl` data frame. Each `wl` data frame must include at least:
+#'   - `timestamp`: POSIXct or datetime of the measurement
+#'   - `wl_cm`: numeric water level in cm
+#'
+#' @return A tibble containing the station metadata with additional columns:
+#'   - `lst_wl_date`: datetime of the latest measurement
+#'   - `flag`: integer (0 = old/missing, 1 = recent)
+#'   - `color`: character ("green", "red", "grey") representing status
+#'   - `lst_wl`: numeric value of the latest water level
+#'   - `text`: HTML string suitable for Leaflet popups including station name, long name, WL, and date
+#'
+#' @details
+#' This function is useful for Shiny apps or Leaflet maps where you want to display
+#' the most recent water level per station, along with a color-coded status and
+#' informative popup text. The `flag` is determined by whether the last measurement
+#' is within the last 3 days.
 #'
 #' @examples
+#' \dontrun{
+#' # Assume wl_list is the output of fetch_po_data()
+#' stations_stats <- stat_calc_stations(wl_list)
+#' 
+#' # Access popup text for the first station
+#' stations_stats$text[1]
+#' }
+#'
+#' @export
 stat_calc_stations <- function(wl_data){
   
   stations_meta <- get_stations()
@@ -64,14 +94,33 @@ stat_calc_stations <- function(wl_data){
 
 
 
-#' Title
+#' Calculate Percentage of Online Stations
 #'
-#' @param stats_table 
+#' `percent_online` computes the percentage of stations in each status category 
+#' based on the `flag` column in a stats table.
 #'
-#' @returns
-#' @export
+#' @param stats_table A data frame or tibble containing at least a `flag` column.  
+#'   Typically, this comes from `stat_calc_stations()` and `flag` indicates:
+#'   - `1` = recent/online  
+#'   - `0` = old/offline
+#'
+#' @return A tibble grouped by `flag` with columns:
+#'   - `flag`: the status flag (0 or 1)  
+#'   - `n`: number of stations in this category  
+#'   - `perc`: percentage of stations in this category
+#'
+#' @details
+#' This function is useful for dashboards or Shiny apps where you want to display 
+#' the proportion of stations that are currently online or have recent measurements. 
+#' The percentages are calculated relative to the total number of stations.
 #'
 #' @examples
+#' \dontrun{
+#' stats <- stat_calc_stations(wl_list)
+#' percent_online(stats)
+#' }
+#'
+#' @export
 percent_online <- function(stats_table){
   
   sum_tab <- stats_table |> 
@@ -87,14 +136,37 @@ percent_online <- function(stats_table){
 
 
 
-#' Title
+#' Prepare Station Status Data with Color Coding
 #'
-#' @param curr_meas_data 
+#' `prep_status` merges station metadata with current measurement data and assigns
+#' a status color for each station based on water level conditions.
 #'
-#' @returns
-#' @export
+#' @param curr_meas_data A data frame or tibble containing current station measurements.
+#'   Must include a `uuid` column to match station metadata, and columns for
+#'   `stateMnwMhw` and `stateNswHsw` indicating water level states (e.g., "normal", "low", "high", "unknown", "commented").
+#'
+#' @return A tibble containing all station metadata from `get_stations()`,
+#'   joined with `curr_meas_data`, and an additional `color` column:
+#'   - `"green"` = normal or low water level  
+#'   - `"red"` = high water level  
+#'   - `"grey"` = unknown or commented
+#'
+#' @details
+#' This function is useful for Leaflet maps or Shiny dashboards where you want to
+#' display stations with **color-coded markers** based on their current status.
+#' It merges station metadata with current measurements and applies a simple
+#' rule-based color assignment.
 #'
 #' @examples
+#' \dontrun{
+#' curr_data <- fetch_po_data(initial = TRUE) |> stat_calc_stations()
+#' prepped_data <- prep_status(curr_data)
+#' 
+#' # Access first station color
+#' prepped_data$color[1]
+#' }
+#'
+#' @export
 prep_status <- function(curr_meas_data){
   
   stations <- get_stations()
