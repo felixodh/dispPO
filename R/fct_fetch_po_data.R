@@ -39,6 +39,10 @@
 #' @export
 fetch_po_data <- function(initial) {
   
+  # --- load stations
+  
+  stations <- get_stations()
+  
   # --- setup 
   if (isTRUE(initial)) {
     days    <- 30L
@@ -57,11 +61,15 @@ fetch_po_data <- function(initial) {
     wl_list <- readRDS(po_cache_dir(
       folder = "dispPO_data", file = "wl_list.rds"
     ))
+    
   }
   
-  
-  
-  stations <- get_stations()
+  # --- check if new stations
+  if(length(wl_list) != nrow(stations)){
+    days    <- 30L
+    wl_list <- list()
+    initial <- TRUE
+  }
   
   
   # --- loop over stations 
@@ -74,6 +82,8 @@ fetch_po_data <- function(initial) {
       "/W/measurements.json?start=P",
       days,"D"
     )
+    
+
     
     # Create request
     resp <- tryCatch(
@@ -111,7 +121,8 @@ fetch_po_data <- function(initial) {
         sname = stations$shortname[i],
         wl    = wl_dt
       )
-    } else {
+    } 
+    else {
       wl_list[[uuid]]$wl <-
         dplyr::rows_upsert(wl_list[[uuid]]$wl, wl_dt, by = "timestamp")
     }
@@ -128,6 +139,68 @@ fetch_po_data <- function(initial) {
 }
 
 
+#' Title
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+fetch_po_curr_meas <- function(){
+  
+  curr_meas <- dplyr::tibble(
+    station = as.character(),
+    uuid = as.character(),
+    timestamp = lubridate::as_datetime(character()),
+    wl = as.double(),
+    stateMnwMhw = as.character(),
+    stateNswHsw = as.character()
+  )
+  
+  stations <- get_stations()
+  
+  results <- vector("list", nrow(stations))
+  
+  for(i in 1:nrow(stations)){
+    curr_meas_url <- paste0("https://pegelonline.wsv.de/webservices/rest-api/v2/stations/",
+                        stations$uuid[i],
+                        "/W/currentmeasurement.json")
+    print(stations[i,])
+    # Create request
+    resp <- tryCatch(
+      httr2::request(curr_meas_url) |>
+        httr2::req_user_agent("Mozilla/5.0") |>
+        httr2::req_headers(Accept = "application/json") |>
+        httr2::req_perform(),
+      error = function(e) {
+        message("Request failed: ", stations$shortname[i])
+        NULL
+      }
+    )
+    
+    # Perform request and get response
+    
+    if (!is.null(resp)) {
+      json <- httr2::resp_body_json(resp)
 
+      
+      if (length(json) > 0) {
+
+        results[[i]] <- tibble::tibble(
+          station = stations$longname[i],
+          uuid = stations$uuid[i],
+          timestamp = lubridate::ymd_hms(json$timestamp, tz = "Europe/Berlin"),
+          wl = as.double(json$value),
+          stateMnwMhw = json$stateMnwMhw,
+          stateNswHsw = json$stateNswHsw
+        )
+      }
+    }
+  }
+  
+  curr_meas_result <- dplyr::bind_rows(results)
+  
+  return(curr_meas_result)
+  
+}
 
 
