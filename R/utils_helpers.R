@@ -104,7 +104,7 @@ get_stations <- function(){
 #'   \item{timestamp}{POSIXct datetime (Europe/Berlin), \code{NA}}
 #'   \item{wl_cm}{Numeric water level in centimeters, \code{NA}}
 #' }
-#'
+#' @export
 #' @examples
 #' empty_wl_dt()
 empty_wl_dt <- function(){
@@ -113,3 +113,5 @@ empty_wl_dt <- function(){
     wl_cm = as.double())
   return(wl_dt)
 }
+
+
