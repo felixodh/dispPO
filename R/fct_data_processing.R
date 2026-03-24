@@ -49,6 +49,12 @@ stat_calc_stations <- function(wl_data){
                   lst_wl = as.double(NA),
                   text = as.character(NA))
   
+  # filter stations based on available wl_data
+  station_uuid <- names(wl_data)
+  
+  stations_stats <- stations_stats |> 
+    dplyr::filter(uuid %in% station_uuid)
+
   for(i in 1:length(wl_data)){
     station <- stations_stats[i,]
 
