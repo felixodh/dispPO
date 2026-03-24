@@ -94,7 +94,9 @@ mod_station_dashboard_server <- function(id,
         removeNotification(notif_id)
       }
       
-      wl_list(data)
+      wl_data <- reactiveValues(
+        data = data
+      )
       
     })
     
@@ -102,7 +104,7 @@ mod_station_dashboard_server <- function(id,
     
     observe({
       stats_table$data <- stat_calc_stations(wl_data = wl_data$data)
-      # stats_table <-  stat_calc_stations(wl_data = data)
+      # stats_table <-  stat_calc_stations(wl_data = wl_data)
       perc_table$data <- percent_online(stats_table = stats_table$data)
       # perc_table <- percent_online(stats_table = stats_table)
     })
