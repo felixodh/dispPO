@@ -28,9 +28,48 @@
 po_cache_dir <- function(folder,file) {
   dir <- tools::R_user_dir("dispPO", "cache")
   if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
-  dir <- paste(dir,folder,file,sep = "/")
+  dir <- file.path(dir,folder,file)
   if(!file.exists(dir)){
-    stop("po_cache_dir: dir inexistent")
+      stop("po_cache_dir: dir inexistent")
   }
   dir
 }
+
+#' Initialize cache files on first installation
+#'
+#' This function ensures that required cache files are available in the user's
+#' cache directory for the \code{dispPO} package. If the cache directory does not
+#' exist, it will be created. If specific cache files are missing, they will be
+#' copied from the package's internal \code{inst/extdata/cache} directory.
+#'
+#' @details
+#' The function checks for the presence of the following files in the user cache:
+#' \itemize{
+#'   \item \code{curr_meas.rds}
+#'   \item \code{lst_query.rds}
+#'   \item \code{wl_list.rds}
+#' }
+#' If any of these files are not found, they are copied from the installed
+#' package directory.
+#'
+#' @return
+#' This function is called for its side effects. It does not return a value.
+#'
+#' @examples
+#' \dontrun{
+#' first_installation()
+#' }
+first_installation <- function(){
+  dir <- tools::R_user_dir("dispPO/dispPo_data", "cache")
+  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
+  if(!any(list.files(dir) %in% c("curr_meas.rds","lst_query.rds","wl_list.rds"))){
+    system.file(package = "dispPO")
+    package_path <- system.file("cache", package = "dispPO")
+    if(package_path == ""){
+      stop(paste("File", file, "not found in package 'dispPO/inst/extdata'"))
+    }
+    file.copy(from = package_path, to = dir)
+  }
+}
+
+
