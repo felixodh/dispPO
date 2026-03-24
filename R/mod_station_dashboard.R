@@ -52,15 +52,16 @@ mod_station_dashboard_ui <- function(id) {
 #'
 #' @noRd 
 mod_station_dashboard_server <- function(id,
-                                         stations_meta){
+                                         stations_meta,
+                                         wl_data){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
     stats_table <- reactiveValues(data = NULL)
     perc_table <- reactiveValues(data = NULL)
-    wl_data <- reactiveValues(
-      data = readRDS(po_cache_dir(folder = "dispPO_data",file = "wl_list.rds"))
-    )
+    # wl_data <- reactiveValues(
+    #   data = readRDS(po_cache_dir(folder = "dispPO_data",file = "wl_list.rds"))
+    # )
     
     observeEvent(input$load_data, {
       
