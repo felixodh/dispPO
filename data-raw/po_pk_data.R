@@ -12,3 +12,6 @@ saveRDS(wl_data,po_cache_dir(folder = "dispPO_data",file = "wl_list.rds"))
 
 
 usethis::use_data(stations_meta, overwrite = TRUE)
+
+usethis::use_data(curr_meas)
+usethis::use_data(wl_list)
