@@ -3,7 +3,10 @@ Title: Visualize PegelOnline water level data
 Version: 0.0.0.9000
 Authors@R: 
     person("Felix", "Op de Hipt", , "felixodh85@googlemail.com", role = c("aut", "cre"))
-Description: This app displays pegelonline water level data
+Description: Displays pegelonline water level data. 
+  It shows the current station status (online/offline) and the current
+  water level status as published by pegelonline.de. Provides functions to fetch, process, and visualize water level measurements
+    from the PegelOnline API. Includes caching, status calculation, and Leaflet map integration.
 License: MIT + file LICENSE
 URL: https://github.com/felixodh/dispPO.git
 BugReports: https://github.com/felixodh/dispPO.git/issues
@@ -14,11 +17,8 @@ Imports:
     httr2,
     leaflet,
     lubridate,
-    memoise,
-    plotly,
-    purrr,
+    dplyr,
     shiny,
-    shinycssloaders,
     shinydashboard,
     shinyWidgets
 Encoding: UTF-8
