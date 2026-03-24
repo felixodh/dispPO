@@ -108,7 +108,7 @@ fetch_po_data <- function(initial) {
         wl_dt <- data.table::rbindlist(json, idcol = "id") |>
           dplyr::as_tibble() |>
           dplyr::transmute(
-            timestamp = lubridate::ymd_hms(timestamp, tz = "Europe/Berlin"),
+            timestamp = lubridate::ymd_hms(timestamp),
             wl_cm     = as.double(value)
           )
       }
@@ -210,7 +210,7 @@ fetch_po_curr_meas <- function(){
       
       if (length(json) > 0) {
 
-        results[[i]] <- tibble::tibble(
+        results[[i]] <- dplyr::tibble(
           station = stations$longname[i],
           uuid = stations$uuid[i],
           timestamp = lubridate::ymd_hms(json$timestamp, tz = "Europe/Berlin"),
