@@ -7,6 +7,15 @@
 app_server <- function(input, output, session) {
   # Your application server logic
   
+  # googledrive::drive_auth(
+  #   path = "inst/app/river-data-491212-i8-cd1b0daa92df.json"
+  # )
+  # # 
+  # googledrive::drive_upload(
+  #   media = "/Felix/Privat/R_Projekte/dispPO_data/curr_meas.rds",
+  #   path = "dispPO_data/data.rds"
+  # )
+  
   wl_data <- reactiveValues(
     data = readRDS(po_cache_dir(folder = "dispPO_data",file = "wl_list.rds"))
   )
