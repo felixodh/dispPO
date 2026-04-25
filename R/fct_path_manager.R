@@ -45,7 +45,7 @@ po_cache_dir <- function(folder,file) {
   dir
 }
 
-po_cache_dir(folder = "dispPO_data",file = "curr_meas.rds")
+# po_cache_dir(folder = "dispPO_data",file = "curr_meas.rds")
 #' Initialize cache files on first installation
 #'
 #' This function ensures that required cache files are available in the user's
@@ -86,3 +86,55 @@ first_installation <- function(){
 }
 
 
+
+#' Title
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+load_google_files <- function(){
+  files <- googledrive::drive_ls()
+
+  ### load wl_file
+  wl_file <- files |> dplyr::filter(name == "wl_list.rds")
+  
+  tmp_wl <- tempfile(fileext = ".rds")
+  
+  wl_list <- googledrive::drive_download(
+    googledrive::as_id(wl_file$id), path = tmp_wl, overwrite = TRUE)
+  
+  wl_list <- readRDS(tmp_wl)
+  
+  ### load curr_meas_file
+  
+  curr_meas_file <- files |> dplyr::filter(name == "curr_meas.rds")
+  
+  tmp_curr_meas <- tempfile(fileext = ".rds")
+  
+  curr_meas <- googledrive::drive_download(
+    googledrive::as_id(curr_meas_file$id), path = tmp_curr_meas, overwrite = TRUE)
+  
+  curr_meas <- readRDS(tmp_curr_meas)
+  
+  ### load last query
+  
+  lst_query_file <- files |> dplyr::filter(name == "lst_query.rds")
+  
+  tmp_lst_query <- tempfile(fileext = ".rds")
+  
+  lst_query <- googledrive::drive_download(
+    googledrive::as_id(lst_query_file$id), path = tmp_lst_query, overwrite = TRUE)
+  
+  curr_meas <- readRDS(tmp_lst_query)
+  
+  google_file_loc <- dplyr::tibble(
+    file_name = c("wl_list.rds","curr_meas.rds","lst_query.rds"),
+    file_path = c(tmp_wl,tmp_curr_meas,tmp_lst_query)
+  )
+  
+  
+  
+  return()
+
+}
