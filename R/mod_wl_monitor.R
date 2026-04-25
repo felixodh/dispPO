@@ -33,7 +33,7 @@ mod_wl_monitor_ui <- function(id) {
             multiple = T
           ),
           shinyWidgets::actionBttn(
-            inputId = "load_data",
+            inputId = ns("load_data"),
             label = "Load Data",
             color = "primary",
             style = "jelly",
@@ -71,7 +71,6 @@ mod_wl_monitor_server <- function(id,
     wl_selected <- reactiveValues(data = NULL)
     
     observeEvent(input$river_sel,{
-
       
       selected_stations$data <- stations_meta$data |> 
         dplyr::filter(water_longname %in% input$river_sel)
@@ -90,11 +89,15 @@ mod_wl_monitor_server <- function(id,
 
     
     observeEvent(input$load_data,{
-      req(selected_stations$data)
-      wl_sel$data <- wl_data[station_sel$uuid]
+      # req(selected_stations$data)
       
+      wl_selected$data <- display_wl_plot(
+        data = wl_data$data,
+        rivers = input$river_sel,
+        stations = stations_meta$data,
+        stations_sel = input$station_sel)
       
-      
+      print(wl_selected$data)
       
       
     })
