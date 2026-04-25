@@ -45,6 +45,9 @@ It first checks if the necessary folders and files exist and if not it creates t
 
 ## About
 
+Data source: PegelOnline (WSV, Germany)
+https://www.pegelonline.wsv.de
+
 You are reading the doc about version : `r golem::pkg_version()`
 
 This README has been compiled on the

@@ -40,6 +40,12 @@ It first checks if the necessary folders and files exist and if not it
 creates them. It loads and displays the data available since the last
 download.
 
+## App preview
+![Dashboard: shows some overall meta infos and offers update button for most recent data](inst/app/www/station_dash.png)
+
+![Water level status: shows the actual water level status as flagged by WSV](inst/app/www/wl_status.png)
+
+
 ## About
 
 You are reading the doc about version : 0.0.0.9000
