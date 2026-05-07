@@ -31,7 +31,8 @@ app_server <- function(input, output, session) {
   mod_station_dashboard_server(
     "station_dashboard_1",
     wl_data = wl_data,
-    stations_meta = stations_meta
+    stations_meta = stations_meta,
+    lst_query = lst_query
   )
   
   curr_meas <- reactiveValues(
@@ -41,6 +42,10 @@ app_server <- function(input, output, session) {
   )
 
 
+  lst_query <- reactiveValues(
+    data = readRDS(po_cache_dir(folder = "dispPO_data",file = "lst_query.rds"))
+  )
+    
   mod_current_state_server(
     "current_state_1",
     curr_meas = curr_meas
@@ -49,5 +54,6 @@ app_server <- function(input, output, session) {
   mod_wl_monitor_server(
     "wl_monitor_1",
     stations_meta = stations_meta,
-    wl_data = wl_data)
+    wl_data = wl_data
+  )
 }
