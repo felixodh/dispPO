@@ -93,6 +93,7 @@ display_wl_plot <- function(data, rivers, stations, stations_sel){
   }
   
   sel_data <- data[names(data) %in% uuids]
+
   
   return(sel_data)
   
