@@ -53,7 +53,8 @@ mod_station_dashboard_ui <- function(id) {
 #' @noRd 
 mod_station_dashboard_server <- function(id,
                                          stations_meta,
-                                         wl_data){
+                                         wl_data,
+                                         lst_query){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
@@ -63,7 +64,7 @@ mod_station_dashboard_server <- function(id,
     #   data = readRDS(po_cache_dir(folder = "dispPO_data",file = "wl_list.rds"))
     # )
     
-    observeEvent(input$load_data, {
+    observeEvent(input$load_data, ignoreInit = T,{
       
       notif_id <- NULL
       
@@ -99,13 +100,18 @@ mod_station_dashboard_server <- function(id,
         data = data
       )
       
+      lst_query <- Sys.Date()
+      
+      saveRDS(lst_query,po_cache_dir(folder = "dispPO_data",file = "lst_query.rds"))
+      
+      
     })
     
     
     
     observe({
       stats_table$data <- stat_calc_stations(wl_data = wl_data$data)
-      # stats_table <-  stat_calc_stations(wl_data = wl_data)
+      # stats_table <-  stat_calc_stations(wl_data = data)
       perc_table$data <- percent_online(stats_table = stats_table$data)
       # perc_table <- percent_online(stats_table = stats_table)
     })
@@ -146,7 +152,7 @@ mod_station_dashboard_server <- function(id,
       shinydashboard::infoBox(
         title = "Request date",
         subtitle = "last request",
-        value = Sys.Date(),
+        value = lst_query$data,
         icon = icon("rotate"),
         color = "blue"
       )
@@ -156,8 +162,8 @@ mod_station_dashboard_server <- function(id,
       leaflet::leaflet(stats_table$data) |> 
         leaflet::addTiles() |>    # OpenStreetMap
         leaflet::addCircleMarkers(
-          lng = ~long,
-          lat = ~lat,
+          lng = ~longitude,
+          lat = ~latitude,
           color = ~color,
           fillColor = ~color,
           fillOpacity = 0.8,
