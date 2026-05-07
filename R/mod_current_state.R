@@ -42,8 +42,8 @@ mod_current_state_server <- function(id,
       leaflet::leaflet(prepped_stat_data$data) |> 
         leaflet::addTiles() |>    # OpenStreetMap
         leaflet::addCircleMarkers(
-          lng = ~long,
-          lat = ~lat,
+          lng = ~longitude,
+          lat = ~latitude,
           color = ~color,
           fillColor = ~color,
           fillOpacity = 0.8,
