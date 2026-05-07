@@ -23,14 +23,14 @@ mod_wl_monitor_ui <- function(id) {
             label = "River Selection",
             choices = c("",unique(get_stations()$water_longname)),
             selected = "",
-            multiple = T
+            multiple = F
           ),
           selectInput(
             inputId = ns("station_sel"),
             label = "Station Selection",
             choices = c("",unique(get_stations()$shortname)),
             selected = "",
-            multiple = T
+            multiple = F
           ),
           shinyWidgets::actionBttn(
             inputId = ns("load_data"),
@@ -72,10 +72,12 @@ mod_wl_monitor_server <- function(id,
     
     observeEvent(input$river_sel,{
       
-      selected_stations$data <- stations_meta$data |> 
-        dplyr::filter(water_longname %in% input$river_sel)
-        # dplyr::filter(water_longname %in% c("RHEIN","ELBE"))
+      # selected_stations$data <- stations_meta$data |> 
+      #   dplyr::filter(water_longname %in% input$river_sel)
       
+      selected_stations$data <- stat_calc_stations(wl_data = wl_data$data) |> 
+        dplyr::filter(!is.na(lst_wl_date),
+                      water_shortname %in% input$river_sel)
       
       updateSelectInput(
         session = session,
@@ -90,16 +92,32 @@ mod_wl_monitor_server <- function(id,
     
     observeEvent(input$load_data,{
       # req(selected_stations$data)
-      
+
       wl_selected$data <- display_wl_plot(
         data = wl_data$data,
         rivers = input$river_sel,
-        stations = stations_meta$data,
+        stations = selected_stations$data,
         stations_sel = input$station_sel)
       
-      print(wl_selected$data)
       
-      
+      output$wl_plot <- plotly::renderPlotly({
+        plotly::plot_ly(
+          data = wl_selected$data$`b475386c-30cc-453a-b3b7-1d17ace13595`$wl,
+          x = ~timestamp,
+          y = ~wl_cm,
+          type = "scatter",
+          mode = "lines"
+        ) |> 
+          plotly::layout(
+            title = paste(
+            "Timeseries of water level 
+            data in cm for station",  
+            wl_selected$data$`b475386c-30cc-453a-b3b7-1d17ace13595`$sname,sep = " "),
+            xaxis = list(title = "Timestamp [yyy-mm-dd hh:mm:ss]"),
+            yaxis = list(title = "Water Level [cm]")
+        )
+      })
+
     })
     
     
