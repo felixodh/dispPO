@@ -41,7 +41,6 @@
 stat_calc_stations <- function(wl_data){
   
   stations_meta <- get_stations()
-  
   stations_stats <- stations_meta |> 
     dplyr::mutate(lst_wl_date = lubridate::as_datetime(NA),
                   flag = as.integer(NA),
@@ -50,13 +49,21 @@ stat_calc_stations <- function(wl_data){
                   text = as.character(NA))
   
   # filter stations based on available wl_data
-  station_uuid <- names(wl_data)
+  station_uuid <- dplyr::tibble(uuid = names(wl_data))
+  
+  # filter availavble stations uuid in wl_data
+  station_uuid <- station_uuid |> 
+    dplyr::filter(uuid %in% stations_stats$uuid)
   
   stations_stats <- stations_stats |> 
-    dplyr::filter(uuid %in% station_uuid)
+    dplyr::filter(uuid %in% station_uuid$uuid)
+  
+  wl_data <- wl_data[stations_stats$uuid]
+  
 
   for(i in 1:length(wl_data)){
     station <- stations_stats[i,]
+    # print(stations_stats[i,])
 
     wl_data_stat <- wl_data[[station$uuid]]$wl
     if(length(wl_data_stat$timestamp) != 0){
