@@ -47,40 +47,59 @@ get_stations <- function(){
   
   
   # Perform request and get response
-  station_response <- httr2::req_perform(station_request)
+  station_response <- tryCatch(
+    httr2::req_perform(station_request),
+    error = function(e){
+      message("station_response: request failed")
+    }
+  )
+    
+  if(is.null(station_response)){
+    return()
+  }
   
   station_json <- httr2::resp_body_json(station_response)
+  
+  meta_station <- station_json |> 
+    purrr::map(purrr::list_flatten) |> 
+    dplyr::bind_rows()
+    
+  # station_response <- httr2::req_perform(station_request)
+  # 
+  # station_json <- httr2::resp_body_json(station_response)
+  # 
+  # 
   # create empty tibble
-  meta_station <- dplyr::tibble(
-    uuid = as.character(),
-    number = as.character(),
-    shortname = as.character(),
-    longname = as.character(),
-    km = as.double(),
-    agency = as.character(),
-    long = as.integer(),
-    lat = as.integer(),
-    water_shortname = as.character(),
-    water_longname = as.character()
-  )
+  # meta_station <- dplyr::tibble(
+  #   uuid = as.character(),
+  #   number = as.character(),
+  #   shortname = as.character(),
+  #   longname = as.character(),
+  #   km = as.double(),
+  #   agency = as.character(),
+  #   long = as.integer(),
+  #   lat = as.integer(),
+  #   water_shortname = as.character(),
+  #   water_longname = as.character()
+  # )
 
-  # loop through stations and add station to tibble
-  for(i in 1:length(station_json)){
-    add_stat <- dplyr::tibble(
-      uuid = as.character(station_json[[i]]$uuid),
-      number = as.character(station_json[[i]]$number),
-      shortname = as.character(station_json[[i]]$shortname),
-      longname = as.character(station_json[[i]]$longname),
-      km = as.double(station_json[[i]]$km),
-      agency = as.character(station_json[[i]]$agency),
-      long = as.double(station_json[[i]]$longitude),
-      lat = as.double(station_json[[i]]$latitude),
-      water_shortname = as.character(station_json[[i]]$water$shortname),
-      water_longname = as.character(station_json[[i]]$water$longname))
-      
-      meta_station <- meta_station |> 
-        dplyr::bind_rows(add_stat)
-  }
+  # # loop through stations and add station to tibble
+  # for(i in 1:length(station_json)){
+  #   add_stat <- dplyr::tibble(
+  #     uuid = as.character(station_json[[i]]$uuid),
+  #     number = as.character(station_json[[i]]$number),
+  #     shortname = as.character(station_json[[i]]$shortname),
+  #     longname = as.character(station_json[[i]]$longname),
+  #     km = as.double(station_json[[i]]$km),
+  #     agency = as.character(station_json[[i]]$agency),
+  #     long = as.double(station_json[[i]]$longitude),
+  #     lat = as.double(station_json[[i]]$latitude),
+  #     water_shortname = as.character(station_json[[i]]$water$shortname),
+  #     water_longname = as.character(station_json[[i]]$water$longname))
+  #     
+  #     meta_station <- meta_station |> 
+  #       dplyr::bind_rows(add_stat)
+  # }
   
   return(meta_station)
   
