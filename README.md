@@ -41,14 +41,31 @@ creates them. It loads and displays the data available since the last
 download.
 
 ## App preview
-![Dashboard: shows some overall meta infos and offers update button for most recent data](inst/app/www/station_dash.png)
 
-![Water level status: shows the actual water level status as flagged by WSV](inst/app/www/wl_status.png)
+<figure>
+<img src="inst/app/www/station_dash.png"
+alt="Dashboard: shows some overall meta infos and offers update button for most recent data" />
+<figcaption aria-hidden="true">Dashboard: shows some overall meta infos
+and offers update button for most recent data</figcaption>
+</figure>
 
-![Water level monitor: shows the actual water level as timeseries by WSV](inst/app/www/water_level.png)
+<figure>
+<img src="inst/app/www/wl_status.png"
+alt="Water level status: shows the actual water level status as flagged by WSV" />
+<figcaption aria-hidden="true">Water level status: shows the actual
+water level status as flagged by WSV</figcaption>
+</figure>
 
+<figure>
+<img src="inst/app/www/water_level.png"
+alt="Water level monitor: shows the actual water level as timeseries by WSV" />
+<figcaption aria-hidden="true">Water level monitor: shows the actual
+water level as timeseries by WSV</figcaption>
+</figure>
 
 ## About
+
+Data source: PegelOnline (WSV, Germany) <https://www.pegelonline.wsv.de>
 
 You are reading the doc about version : 0.0.0.9000
 
@@ -56,68 +73,5 @@ This README has been compiled on the
 
 ``` r
 Sys.time()
-#> [1] "2026-03-24 10:15:09 CET"
-```
-
-Here are the tests results and package coverage:
-
-``` r
-devtools::check(quiet = TRUE)
-#> ℹ Loading dispPO
-#> ── R CMD check results ────────────────────────────────── dispPO 0.0.0.9000 ────
-#> Duration: 2m 3.1s
-#> 
-#> ❯ checking code files for non-ASCII characters ... WARNING
-#>   Found the following file with non-ASCII characters:
-#>     R/fct_fetch_po_data.R
-#>   Portable packages must use only ASCII characters in their R code and
-#>   NAMESPACE directives, except perhaps in comments.
-#>   Use \uxxxx escapes for other characters.
-#>   Function 'tools::showNonASCIIfile' can help in finding non-ASCII
-#>   characters in files.
-#> 
-#> ❯ checking for future file timestamps ... NOTE
-#>   unable to verify current time
-#> 
-#> ❯ checking top-level files ... NOTE
-#>   Non-standard file/directory found at top level:
-#>     'rsconnect'
-#> 
-#> ❯ checking R code for possible problems ... [11s] NOTE
-#>   fetch_po_data: no visible binding for global variable 'timestamp'
-#>   fetch_po_data: no visible binding for global variable 'value'
-#>   percent_online: no visible binding for global variable 'flag'
-#>   stat_calc_stations: no visible binding for global variable 'uuid'
-#>   stat_calc_stations: no visible binding for global variable 'timestamp'
-#>   stat_calc_stations: no visible binding for global variable 'wl_cm'
-#>   stat_calc_stations: no visible binding for global variable 'shortname'
-#>   stat_calc_stations: no visible binding for global variable 'longname'
-#>   stat_calc_stations: no visible binding for global variable 'lst_wl'
-#>   stat_calc_stations: no visible binding for global variable
-#>     'lst_wl_date'
-#>   Undefined global functions or variables:
-#>     flag longname lst_wl lst_wl_date shortname timestamp uuid value wl_cm
-#>   Consider adding
-#>     importFrom("utils", "timestamp")
-#>   to your NAMESPACE file.
-#> 
-#> 0 errors ✔ | 1 warning ✖ | 3 notes ✖
-#> Error:
-#> ! R CMD check found WARNINGs
-```
-
-``` r
-covr::package_coverage()
-#> dispPO Coverage: 23.99%
-#> R/app_config.R: 0.00%
-#> R/app_server.R: 0.00%
-#> R/app_ui.R: 0.00%
-#> R/fct_data_processing.R: 0.00%
-#> R/fct_fetch_po_data.R: 0.00%
-#> R/run_app.R: 0.00%
-#> R/zzz.R: 0.00%
-#> R/fct_path_manager.R: 28.57%
-#> R/mod_current_state.R: 37.21%
-#> R/mod_station_dashboard.R: 49.09%
-#> R/utils_helpers.R: 89.19%
+#> [1] "2026-05-07 11:46:43 CEST"
 ```
