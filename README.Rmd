@@ -43,6 +43,14 @@ You can launch the application by running:
 
 It first checks if the necessary folders and files exist and if not it creates them. It loads and displays the data available since the last download.  
 
+## App preview
+![Dashboard: shows some overall meta infos and offers update button for most recent data](inst/app/www/station_dash.png)
+
+![Water level status: shows the actual water level status as flagged by WSV](inst/app/www/wl_status.png)
+
+![Water level monitor: shows the actual water level as timeseries by WSV](inst/app/www/water_level.png)
+
+
 ## About
 
 Data source: PegelOnline (WSV, Germany)
@@ -56,16 +64,10 @@ This README has been compiled on the
 Sys.time()
 ```
 
-Here are the tests results and package coverage:
 
-```{r, error = TRUE}
-devtools::check(quiet = TRUE)
-```
 
 ```{r echo = FALSE}
 unloadNamespace("dispPO")
 ```
 
-```{r, error = TRUE}
-covr::package_coverage()
-```
+

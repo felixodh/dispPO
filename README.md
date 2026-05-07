@@ -45,6 +45,8 @@ download.
 
 ![Water level status: shows the actual water level status as flagged by WSV](inst/app/www/wl_status.png)
 
+![Water level monitor: shows the actual water level as timeseries by WSV](inst/app/www/water_level.png)
+
 
 ## About
 
